@@ -12,6 +12,7 @@
     <artifactId>calc-core</artifactId>
 
     <name>calc-core</name>
+
     <dependencies>
         <dependency>
             <groupId>edu.dnu.fpm.pz</groupId>
