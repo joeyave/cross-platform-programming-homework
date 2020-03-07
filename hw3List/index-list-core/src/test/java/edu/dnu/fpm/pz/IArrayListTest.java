@@ -5,9 +5,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Unit test for simple IIndexList.
+ * Unit test for simple IArrayList.
  */
-public class IIndexListTest
+public class IArrayListTest
 {
     /**
      * Rigorous Test :-)

@@ -91,31 +91,8 @@ public class LinkedList<T> implements ILinkedList<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index > getSize()) {
+        if (index < 0 || index > getSize() - 1) {
             throw new IndexOutOfBoundsException();
-        }
-
-        Node<T> temp = moveToElement(index);
-        return temp.value;
-    }
-
-    @Override
-    public void add(int index, T value) {
-        if (index < 0 || index > getSize()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        Node<T> temp = moveToElement(index);
-        temp.value = value;
-    }
-
-    private Node<T> moveToElement(int index) {
-        if (index < 0 || index > getSize()) {
-            throw new IndexOutOfBoundsException();
-        }
-
-        if (head == null) {
-            throw new NoSuchElementException();
         }
 
         Node<T> temp = head;
@@ -123,22 +100,30 @@ public class LinkedList<T> implements ILinkedList<T> {
             temp = temp.next;
         }
 
-        return temp;
+        return temp.value;
+    }
+
+    @Override
+    public void add(int index, T value) {
+        if (index < 1 || index > getSize() - 1) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        Node<T> node = new Node<T>(value, null);
+        Node<T> temp = head;
+        Node<T> prev = temp;
+        for (int i = 0; i < index; i++) {
+            prev = temp;
+            temp = temp.next;
+        }
+        prev.next = node;
+        node.next = temp;
     }
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index > getSize()) {
+        if (index < 1 || index > getSize() - 1) {
             throw new IndexOutOfBoundsException();
-        }
-
-        if (head == null) {
-            throw new NoSuchElementException();
-        }
-        if (index == 0) {
-            T value = head.value;
-            head = head.next;
-            return value;
         }
 
         Node<T> temp = head;
