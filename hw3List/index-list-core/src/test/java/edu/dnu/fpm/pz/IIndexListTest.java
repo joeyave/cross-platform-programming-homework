@@ -5,9 +5,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
- * Unit test for simple LinkedList.
+ * Unit test for simple IIndexList.
  */
-public class LinkedListTest
+public class IIndexListTest
 {
     /**
      * Rigorous Test :-)

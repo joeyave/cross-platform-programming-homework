@@ -1,124 +1,180 @@
 package edu.dnu.fpm.pz.linkedList.core;
 
-import edu.dnu.fpm.pz.list.interfaces.List;
+import edu.dnu.fpm.pz.list.interfaces.ILinkedList;
 
-public class LinkedList implements List {
-    private int size;
-    private Node head;
+import java.util.NoSuchElementException;
+
+
+public class LinkedList<T> implements ILinkedList<T> {
+
+    protected Node<T> head;
+    protected int size;
 
     public LinkedList() {
-        this.size = 0;
-        this.head = null;
+        size = 0;
+        head = null;
     }
 
     @Override
-    public void add(Object data) {
-        if (head == null) {
-            head = new Node(data);
-        }
+    public void addFirst(T value) {
+        head = new Node<T>(value, head);
+        size++;
+    }
 
-        Node temp = new Node(data);
-        Node current = head;
-
-        if (current != null) {
-            while (current.getNext() != null) {
-                current = current.getNext();
+    @Override
+    public void addLast(T value) {
+        if (head == null)
+            addFirst(value);
+        else {
+            Node<T> temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
             }
-            current.setNext(temp);
+            temp.next = new Node<T>(value, null);
             size++;
         }
     }
 
     @Override
-    public Object get(int index) {
-        // TODO: check if index is valid.
-
-        Node current = null;
-        if (head != null) {
-            current = head.getNext();
-
-            for (int i = 0; i < index; i++) {
-                if (current.getNext() == null) {
-                    return null;
-                }
-                current = current.getNext();
-            }
-            return current.getData();
-        }
-        return null;
+    public T removeFirst() {
+        T temp = getFirst();
+        head = head.next;
+        size--;
+        return temp;
     }
 
     @Override
-    public boolean remove(int index) {
-        // TODO: check if index is valid.
-
-        Node current = head;
-        if (head != null) {
-            for (int i = 0; i < index; i++) {
-                if (current.getNext() == null)
-                    return false;
-
-                current = current.getNext();
-            }
-            current.setNext(current.getNext().getNext());
-
-            size--;
-            return true;
+    public T removeLast() {
+        if (head == null) {
+            throw new NoSuchElementException();
         }
-        return false;
+
+        Node<T> temp = head;
+        Node<T> prev = temp;
+        while (temp.next != null) {
+            prev = temp;
+            temp = temp.next;
+        }
+
+        T value = temp.value;
+        prev.next = null;
+        size--;
+        return value;
     }
 
     @Override
-    public int size() {
+    public T getFirst() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        return head.value;
+    }
+
+    @Override
+    public T getLast() {
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+
+        Node<T> temp = head;
+        while (temp.next != null) {
+            temp = temp.next;
+        }
+
+        return temp.value;
+    }
+
+    @Override
+    public int getSize() {
         return size;
     }
 
     @Override
-    public String toString() {
-        StringBuilder output = new StringBuilder();
-
-        if (head != null) {
-            Node current = head.getNext();
-            output.append("head->");
-            while (current != null) {
-                output.append("[").append(current.getData().toString()).append("]->");
-                current = current.getNext();
-            }
-            output.append("null");
-        } else {
-            output.append("list is empty");
+    public T get(int index) {
+        if (index < 0 || index > getSize()) {
+            throw new IndexOutOfBoundsException();
         }
-        return output.toString();
+
+        Node<T> temp = moveToElement(index);
+        return temp.value;
+    }
+
+    @Override
+    public void add(int index, T value) {
+        if (index < 0 || index > getSize()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        Node<T> temp = moveToElement(index);
+        temp.value = value;
+    }
+
+    private Node<T> moveToElement(int index) {
+        if (index < 0 || index > getSize()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+
+        Node<T> temp = head;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+        }
+
+        return temp;
+    }
+
+    @Override
+    public T remove(int index) {
+        if (index < 0 || index > getSize()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        if (head == null) {
+            throw new NoSuchElementException();
+        }
+        if (index == 0) {
+            T value = head.value;
+            head = head.next;
+            return value;
+        }
+
+        Node<T> temp = head;
+        Node<T> prev = temp;
+
+        for (int i = 0; i < index; i++) {
+            prev = temp;
+            temp = temp.next;
+        }
+
+        prev.next = temp.next;
+
+        size--;
+        return temp.value;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        Node<T> temp = head;
+        while (temp != null) {
+            result.append("[").append(temp.value).append("]").append("->");
+            temp = temp.next;
+        }
+
+        result.append("null");
+        return result.toString();
     }
 }
 
-class Node {
-    Node next;
-    Object data;
+class Node<T> {
+    T value;
+    Node<T> next;
 
-    public Node(Object dataValue) {
-        next = null;
-        data = dataValue;
-    }
-
-    public Node(Object dataValue, Node nextValue) {
-        next = nextValue;
-        data = dataValue;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object dataValue) {
-        data = dataValue;
-    }
-
-    public Node getNext() {
-        return next;
-    }
-
-    public void setNext(Node nextValue) {
-        next = nextValue;
+    public Node(T data, Node<T> next) {
+        this.value = data;
+        this.next = next;
     }
 }
