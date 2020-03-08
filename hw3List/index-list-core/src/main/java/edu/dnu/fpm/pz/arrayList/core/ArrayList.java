@@ -1,4 +1,4 @@
-package edu.dnu.fpm.pz.indexList.core;
+package edu.dnu.fpm.pz.arrayList.core;
 
 import edu.dnu.fpm.pz.list.interfaces.IArrayList;
 
@@ -31,7 +31,7 @@ public class ArrayList<T> implements IArrayList<T> {
 
     @Override
     public T change(int index, T value) {
-        if (index < 0 || index >= getSize()) {
+        if (index < 0 || index > getSize() - 1) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -47,7 +47,7 @@ public class ArrayList<T> implements IArrayList<T> {
 
     @Override
     public T get(int index) {
-        if (index < 0 || index >= getSize()) {
+        if (index < 0 || index > getSize() - 1) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -56,7 +56,7 @@ public class ArrayList<T> implements IArrayList<T> {
 
     @Override
     public void add(int index, T value) {
-        if (index < 0) {
+        if (index < 0 || index > list.length - 1) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -75,15 +75,15 @@ public class ArrayList<T> implements IArrayList<T> {
 
     @Override
     public T remove(int index) {
-        if (index < 0 || index >= getSize()) {
+        if (index < 0 || index > getSize() - 1) {
             throw new IndexOutOfBoundsException();
         }
 
         T value = list[index];
-        if (getSize() - 1 - index >= 0) {
-            System.arraycopy(list, index + 1, list, index, getSize() - 1 - index);
+        for (int i = index; i < getSize() - 1; i++) {
+            list[i] = list[i + 1];
         }
-
+        list[getSize() - 1] = null;
         size--;
         return value;
     }
