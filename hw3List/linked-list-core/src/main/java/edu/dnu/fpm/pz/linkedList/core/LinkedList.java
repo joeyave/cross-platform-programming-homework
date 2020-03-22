@@ -1,14 +1,16 @@
 package edu.dnu.fpm.pz.linkedList.core;
 
 import edu.dnu.fpm.pz.list.interfaces.ILinkedList;
-
-import java.util.NoSuchElementException;
+import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
+import edu.dnu.fpm.pz.list.interfaces.Validator;
 
 
 public class LinkedList<T> implements ILinkedList<T> {
 
     protected Node<T> head;
     protected int size;
+
+    Validator<T> validator = new Validator<>(this);
 
     public LinkedList() {
         size = 0;
@@ -17,7 +19,7 @@ public class LinkedList<T> implements ILinkedList<T> {
 
     @Override
     public void addFirst(T value) {
-        head = new Node<T>(value, head);
+        head = new Node<>(value, head);
         size++;
     }
 
@@ -30,13 +32,13 @@ public class LinkedList<T> implements ILinkedList<T> {
             while (temp.next != null) {
                 temp = temp.next;
             }
-            temp.next = new Node<T>(value, null);
+            temp.next = new Node<>(value, null);
             size++;
         }
     }
 
     @Override
-    public T removeFirst() {
+    public T removeFirst() throws InvalidIndexException {
         T temp = getFirst();
         head = head.next;
         size--;
@@ -44,10 +46,8 @@ public class LinkedList<T> implements ILinkedList<T> {
     }
 
     @Override
-    public T removeLast() {
-        if (head == null) {
-            throw new NoSuchElementException();
-        }
+    public T removeLast() throws InvalidIndexException {
+        validator.headValidate(head);
 
         Node<T> temp = head;
         Node<T> prev = temp;
@@ -63,18 +63,14 @@ public class LinkedList<T> implements ILinkedList<T> {
     }
 
     @Override
-    public T getFirst() {
-        if (head == null) {
-            throw new NoSuchElementException();
-        }
+    public T getFirst() throws InvalidIndexException {
+        validator.headValidate(head);
         return head.value;
     }
 
     @Override
-    public T getLast() {
-        if (head == null) {
-            throw new NoSuchElementException();
-        }
+    public T getLast() throws InvalidIndexException {
+        validator.headValidate(head);
 
         Node<T> temp = head;
         while (temp.next != null) {
@@ -90,10 +86,8 @@ public class LinkedList<T> implements ILinkedList<T> {
     }
 
     @Override
-    public T get(int index) {
-        if (index < 0 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
-        }
+    public T get(int index) throws InvalidIndexException {
+        validator.indexValidate(index);
 
         Node<T> temp = head;
         for (int i = 0; i < index; i++) {
@@ -104,12 +98,15 @@ public class LinkedList<T> implements ILinkedList<T> {
     }
 
     @Override
-    public void add(int index, T value) {
-        if (index < 1 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
+    public void add(int index, T value) throws InvalidIndexException {
+        validator.indexValidate(index);
+
+        if (index == 0) {
+            addFirst(value);
+            return;
         }
 
-        Node<T> node = new Node<T>(value, null);
+        Node<T> node = new Node<>(value, null);
         Node<T> temp = head;
         Node<T> prev = temp;
         for (int i = 0; i < index; i++) {
@@ -121,9 +118,11 @@ public class LinkedList<T> implements ILinkedList<T> {
     }
 
     @Override
-    public T remove(int index) {
-        if (index < 1 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
+    public T remove(int index) throws InvalidIndexException {
+        validator.indexValidate(index);
+
+        if (index == 0) {
+            return removeFirst();
         }
 
         Node<T> temp = head;
@@ -138,6 +137,20 @@ public class LinkedList<T> implements ILinkedList<T> {
 
         size--;
         return temp.value;
+    }
+
+    @Override
+    public T change(int index, T value) throws InvalidIndexException {
+        validator.indexValidate(index);
+
+        Node<T> temp = head;
+        for (int i = 0; i < index; i++) {
+            temp = temp.next;
+        }
+
+        T old = temp.value;
+        temp.value = value;
+        return old;
     }
 
     @Override

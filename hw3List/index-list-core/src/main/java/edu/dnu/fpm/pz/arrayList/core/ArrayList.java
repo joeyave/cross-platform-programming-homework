@@ -1,12 +1,16 @@
 package edu.dnu.fpm.pz.arrayList.core;
 
-import edu.dnu.fpm.pz.list.interfaces.IArrayList;
+import edu.dnu.fpm.pz.list.interfaces.IList;
+import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
+import edu.dnu.fpm.pz.list.interfaces.Validator;
 
-public class ArrayList<T> implements IArrayList<T> {
+public class ArrayList<T> implements IList<T> {
     private static final int DEFAULT_CAPACITY = 10;
 
     private int size;
     private T[] list;
+
+    Validator<T> validator = new Validator<>(this);
 
     @SuppressWarnings("unchecked")
     public ArrayList() {
@@ -30,14 +34,42 @@ public class ArrayList<T> implements IArrayList<T> {
     }
 
     @Override
-    public T change(int index, T value) {
-        if (index < 0 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
-        }
+    public T change(int index, T value) throws InvalidIndexException {
+        validator.indexValidate(index);
 
         T old = list[index];
         list[index] = value;
         return old;
+    }
+
+    @Override
+    public void addFirst(T value) throws InvalidIndexException {
+        add(0, value);
+    }
+
+    @Override
+    public void addLast(T value) throws InvalidIndexException {
+        add(size, value);
+    }
+
+    @Override
+    public T removeFirst() throws InvalidIndexException {
+        return remove(0);
+    }
+
+    @Override
+    public T removeLast() throws InvalidIndexException {
+        return remove(size - 1);
+    }
+
+    @Override
+    public T getFirst() {
+        return list[0];
+    }
+
+    @Override
+    public T getLast() {
+        return list[size - 1];
     }
 
     @Override
@@ -46,19 +78,15 @@ public class ArrayList<T> implements IArrayList<T> {
     }
 
     @Override
-    public T get(int index) {
-        if (index < 0 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
-        }
+    public T get(int index) throws InvalidIndexException {
+        validator.indexValidate(index);
 
         return list[index];
     }
 
     @Override
-    public void add(int index, T value) {
-        if (index < 0 || index > list.length - 1) {
-            throw new IndexOutOfBoundsException();
-        }
+    public void add(int index, T value) throws InvalidIndexException {
+        validator.indexValidate(index);
 
         if (list.length == getSize()) {
             expand();
@@ -74,10 +102,8 @@ public class ArrayList<T> implements IArrayList<T> {
 
 
     @Override
-    public T remove(int index) {
-        if (index < 0 || index > getSize() - 1) {
-            throw new IndexOutOfBoundsException();
-        }
+    public T remove(int index) throws InvalidIndexException {
+        validator.indexValidate(index);
 
         T value = list[index];
         for (int i = index; i < getSize() - 1; i++) {

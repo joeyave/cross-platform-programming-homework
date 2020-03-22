@@ -5,11 +5,11 @@ public interface ILinkedList<T> extends IList<T> {
 
     void addLast(T value);
 
-    T removeFirst();
+    T removeFirst() throws InvalidIndexException;
 
-    T removeLast();
+    T removeLast() throws InvalidIndexException;
 
-    T getFirst();
+    T getFirst() throws InvalidIndexException;
 
-    T getLast();
+    T getLast() throws InvalidIndexException;
 }
