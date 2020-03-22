@@ -8,12 +8,9 @@ import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
 
 public class App {
     public static void main(String[] args) {
-        LinkedList<String> linkedList = new LinkedList<>();
-        ArrayList<String> arrayList = new ArrayList<>();
-
         try {
-            listTest(linkedList);
-            listTest(arrayList);
+            listTest(new LinkedList<>());
+            listTest(new ArrayList<>());
         } catch (InvalidIndexException e) {
             e.printStackTrace();
         }

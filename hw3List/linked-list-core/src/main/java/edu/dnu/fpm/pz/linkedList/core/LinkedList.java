@@ -1,11 +1,11 @@
 package edu.dnu.fpm.pz.linkedList.core;
 
-import edu.dnu.fpm.pz.list.interfaces.ILinkedList;
 import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
+import edu.dnu.fpm.pz.list.interfaces.IList;
 import edu.dnu.fpm.pz.list.interfaces.Validator;
 
 
-public class LinkedList<T> implements ILinkedList<T> {
+public class LinkedList<T> implements IList<T> {
 
     protected Node<T> head;
     protected int size;
