@@ -11,6 +11,7 @@
     <modules>
         <module>hw2Calculator</module>
         <module>hw3List</module>
+        <module>hw4Processor</module>
     </modules>
 
     <name>homework</name>

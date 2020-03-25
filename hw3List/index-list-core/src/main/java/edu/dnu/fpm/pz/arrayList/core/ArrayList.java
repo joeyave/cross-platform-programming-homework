@@ -54,21 +54,25 @@ public class ArrayList<T> implements IList<T> {
 
     @Override
     public T removeFirst() throws InvalidIndexException {
+        validator.nullValidate(list[0]);
         return remove(0);
     }
 
     @Override
     public T removeLast() throws InvalidIndexException {
+        validator.indexValidate(size - 1);
         return remove(size - 1);
     }
 
     @Override
-    public T getFirst() {
+    public T getFirst() throws InvalidIndexException {
+        validator.nullValidate(list[0]);
         return list[0];
     }
 
     @Override
-    public T getLast() {
+    public T getLast() throws InvalidIndexException {
+        validator.indexValidate(size - 1);
         return list[size - 1];
     }
 
@@ -106,9 +110,7 @@ public class ArrayList<T> implements IList<T> {
         validator.indexValidate(index);
 
         T value = list[index];
-        for (int i = index; i < getSize() - 1; i++) {
-            list[i] = list[i + 1];
-        }
+        if (getSize() - 1 - index >= 0) System.arraycopy(list, index + 1, list, index, getSize() - 1 - index);
         list[getSize() - 1] = null;
         size--;
         return value;
@@ -122,5 +124,9 @@ public class ArrayList<T> implements IList<T> {
             result.append("[").append(t).append("]");
         }
         return result.toString();
+    }
+
+    public int getLength() {
+        return list.length;
     }
 }

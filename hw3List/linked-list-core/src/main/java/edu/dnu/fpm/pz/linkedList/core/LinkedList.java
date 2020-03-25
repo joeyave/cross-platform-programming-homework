@@ -47,7 +47,7 @@ public class LinkedList<T> implements IList<T> {
 
     @Override
     public T removeLast() throws InvalidIndexException {
-        validator.headValidate(head);
+        validator.nullValidate(head);
 
         Node<T> temp = head;
         Node<T> prev = temp;
@@ -64,13 +64,13 @@ public class LinkedList<T> implements IList<T> {
 
     @Override
     public T getFirst() throws InvalidIndexException {
-        validator.headValidate(head);
+        validator.nullValidate(head);
         return head.value;
     }
 
     @Override
     public T getLast() throws InvalidIndexException {
-        validator.headValidate(head);
+        validator.nullValidate(head);
 
         Node<T> temp = head;
         while (temp.next != null) {

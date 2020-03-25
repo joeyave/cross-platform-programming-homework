@@ -8,14 +8,17 @@ public class Validator<T> {
     }
 
     public void indexValidate(int index) throws InvalidIndexException {
-        if (index < 0 || index > list.getSize()) {
-            throw new InvalidIndexException("Invalid index!");
+        if (index < 0) {
+            throw new InvalidIndexException("Invalid index! Index was less than expected.");
+        }
+        if (index > list.getSize()) {
+            throw new InvalidIndexException("Invalid index! Index was more than expected.");
         }
     }
 
-    public void headValidate(Object head) throws InvalidIndexException {
-        if (head == null) {
-            throw new InvalidIndexException("Head was null!");
+    public void nullValidate(Object object) throws InvalidIndexException {
+        if (object == null) {
+            throw new InvalidIndexException("Object was null!");
         }
     }
 }
