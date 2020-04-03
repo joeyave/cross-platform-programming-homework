@@ -11,6 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.times;
 
 public class ProcessorTest {
     @Rule
@@ -36,16 +37,17 @@ public class ProcessorTest {
     @Test
     public void testProduce() {
         // Given.
-        String producedString = "Magic value";
-        Mockito.when(producer.produce()).thenReturn(producedString);
+        String predefinedString = "Magic value";
+        Mockito.when(producer.produce()).thenReturn(predefinedString);
 
         // When.
         String result = producer.produce();
 
         // Then.
-        Assert.assertNotEquals(producedString, result);
-        Assert.assertEquals(producedString, result);
-        Mockito.verify(producer).produce();
+        Assert.assertNotNull(result);
+        Assert.assertEquals(predefinedString, result);
+        Mockito.verify(producer, times(1)).produce();
+        Mockito.verifyNoMoreInteractions(producer);
     }
 
     @Test
@@ -57,7 +59,7 @@ public class ProcessorTest {
         consumer.consume(producedString);
 
         // Then.
-        Mockito.verify(consumer).consume(valueCaptor.capture());
+        Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
         String actual = valueCaptor.getValue();
         assertEquals(producedString, actual);
     }
@@ -76,15 +78,15 @@ public class ProcessorTest {
     @Test
     public void testProcessWithoutException() {
         // Given.
-        String producedString = "Magic value";
-        Mockito.when(producer.produce()).thenReturn(producedString);
+        String predefinedString = "New value";
+        Mockito.when(producer.produce()).thenReturn(predefinedString);
 
         // When.
         processor.process();
 
         // Then.
-        Mockito.verify(consumer).consume(valueCaptor.capture());
+        Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
         String actual = valueCaptor.getValue();
-        assertEquals(producedString, actual);
+        assertEquals(predefinedString, actual);
     }
 }
