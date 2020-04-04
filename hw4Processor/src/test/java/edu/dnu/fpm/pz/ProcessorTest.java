@@ -35,6 +35,20 @@ public class ProcessorTest {
     }
 
     @Test
+    public void testConsume() {
+        // Given.
+        String predefinedString = "Something";
+
+        // When.
+        consumer.consume(predefinedString);
+
+        // Then.
+        Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
+        String actualString = valueCaptor.getValue();
+        assertEquals(predefinedString, actualString);
+    }
+
+    @Test
     public void testProduce() {
         // Given.
         String predefinedString = "Magic value";
@@ -51,42 +65,11 @@ public class ProcessorTest {
     }
 
     @Test
-    public void testConsume() {
-        // Given.
-        String producedString = "Magic value";
-
-        // When.
-        consumer.consume(producedString);
-
-        // Then.
-        Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
-        String actual = valueCaptor.getValue();
-        assertEquals(producedString, actual);
-    }
-
-    @Test
     public void testProcessWithException() {
         // Given.
         thrown.expect(IllegalStateException.class);
 
         // When.
         processor.process();
-
-        // Then.
-    }
-
-    @Test
-    public void testProcessWithoutException() {
-        // Given.
-        String predefinedString = "New value";
-        Mockito.when(producer.produce()).thenReturn(predefinedString);
-
-        // When.
-        processor.process();
-
-        // Then.
-        Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
-        String actual = valueCaptor.getValue();
-        assertEquals(predefinedString, actual);
     }
 }
