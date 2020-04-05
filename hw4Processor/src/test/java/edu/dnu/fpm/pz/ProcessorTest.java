@@ -34,14 +34,14 @@ public class ProcessorTest {
 
     @Test
     public void testProcessorWithProducerPredefinedBehavior() {
-        // Given.
+        // Given
         String predefinedString = "Magic value";
         Mockito.when(producer.produce()).thenReturn(predefinedString);
 
-        // When.
+        // When
         processor.process();
 
-        // Then.
+        // Then
         Mockito.verify(producer, Mockito.times(1)).produce();
         Mockito.verifyNoMoreInteractions(producer);
     }
@@ -50,9 +50,10 @@ public class ProcessorTest {
     public void testProcessorWithConsumerPredefinedBehavior () {
         // Given
         String producedString = "Magic value";
+        Mockito.when(producer.produce()).thenReturn(producedString);
 
         // When
-        consumer.consume(producedString);
+        processor.process();
 
         //Then
         Mockito.verify(consumer, Mockito.times(1)).consume(valueCaptor.capture());
@@ -62,10 +63,10 @@ public class ProcessorTest {
 
     @Test
     public void testProcessWithException() {
-        // Given.
+        // Given
         thrown.expect(IllegalStateException.class);
 
-        // When.
+        // When
         processor.process();
     }
 }

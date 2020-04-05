@@ -26,43 +26,43 @@ public class LinkedListTest {
 
     @Test
     public void addFirstElementShouldBecomeHead() throws InvalidIndexException {
-        //Given.
+        // Given
         int expectedSize = 1;
         String expectedValue = "first";
 
-        //When.
+        // When
         linkedList.addFirst(expectedValue);
         String actualValue = linkedList.getFirst();
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
     @Test
     public void addLastElementShouldBecomeTail() throws InvalidIndexException {
-        // Given.
+        // Given
         int expectedSize = 1;
         String expectedValue = "last";
 
-        // When.
+        // When
         linkedList.addLast(expectedValue);
         String actualValue = linkedList.getLast();
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
     @Test
     public void addElementAtIndex1ShouldPlaceItAfterFirstElement() throws InvalidIndexException {
-        //Given.
+        // Given
         int expectedSize = 5;
         String expectedValue = "index 1 insertion";
 
-        // When.
+        // When
         linkedList.addFirst("0");
         linkedList.addFirst("0");
         linkedList.addFirst("0");
@@ -71,53 +71,53 @@ public class LinkedListTest {
         String actualValue = linkedList.get(1);
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
     @Test
     public void removeFirstElementShouldReturnFirstElement() throws InvalidIndexException {
-        // Given.
+        // Given
         int expectedSize = 1;
         String expectedValue = "first";
 
-        // When.
+        // When
         linkedList.addFirst("last");
         linkedList.addFirst("first");
         String actualValue = linkedList.removeFirst();
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
     @Test
     public void removeLastElementShouldReturnLastElement() throws InvalidIndexException {
-        // Given.
+        // Given
         int expectedSize = 1;
         String expectedValue = "last";
 
-        // When.
+        // When
         linkedList.addFirst("last");
         linkedList.addFirst("first");
         String actualValue = linkedList.removeLast();
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
     @Test
     public void removeElementAtIndex2ShouldShiftElementsAfterRemovedOne() throws InvalidIndexException {
-        // Given.
+        // Given
         int expectedSize = 4;
         String expectedValue = "3";
         String expectedRemovedValue = "2";
 
-        // When.
+        // When
         linkedList.addFirst("4");
         linkedList.addFirst("3");
         linkedList.addFirst("2");
@@ -127,122 +127,122 @@ public class LinkedListTest {
         String actualValue = linkedList.get(2);
         int actualSize = linkedList.getSize();
 
-        // Then.
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedRemovedValue, actualRemovedValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
 
-    String indexLessMessage = "Invalid index! Index was less than expected.";
-    String indexMoreMessage = "Invalid index! Index was more than expected.";
-    String nullHeadMessage = "Object was null!";
+    final String INDEX_LESS_MESSAGE = "Invalid index! Index was less than expected.";
+    final String INDEX_MORE_MESSAGE = "Invalid index! Index was more than expected.";
+    final String NULL_HEAD_MESSAGE = "Object was null!";
 
     @Test
     public void addAtNegativeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
-        // When.
+        // When
         linkedList.add(-1, "less exception");
         thrown = ExpectedException.none();
     }
 
     @Test
     public void addAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
-        // When.
+        // When
         linkedList.add(2, "more exception");
         thrown = ExpectedException.none();
     }
 
     @Test
     public void getAtNegativeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
-        // When.
+        // When
         linkedList.get(-1);
         thrown = ExpectedException.none();
     }
 
     @Test
     public void getAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
-        // When.
+        // When
         linkedList.get(2);
         thrown = ExpectedException.none();
     }
 
     @Test
     public void removeAtNegativeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
-        // When.
+        // When
         linkedList.remove(-1);
         thrown = ExpectedException.none();
     }
 
     @Test
     public void removeAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
-        // When.
+        // When
         linkedList.remove(2);
         thrown = ExpectedException.none();
     }
 
     @Test
     public void getFirstElementOnEmptyListShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullHeadMessage);
+        thrown.expectMessage(NULL_HEAD_MESSAGE);
 
-        // When.
+        // When
         linkedList.getFirst();
         thrown = ExpectedException.none();
     }
 
     @Test
     public void getLastElementOnEmptyListShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullHeadMessage);
+        thrown.expectMessage(NULL_HEAD_MESSAGE);
 
-        // When.
+        // When
         linkedList.getLast();
         thrown = ExpectedException.none();
     }
 
     @Test
     public void removeFirstElementOnEmptyListShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullHeadMessage);
+        thrown.expectMessage(NULL_HEAD_MESSAGE);
 
-        // When.
+        // When
         linkedList.removeFirst();
         thrown = ExpectedException.none();
     }
 
     @Test
     public void removeLastElementOnEmptyListShouldThrowException() throws InvalidIndexException {
-        // Given.
+        // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullHeadMessage);
+        thrown.expectMessage(NULL_HEAD_MESSAGE);
 
-        // When.
+        // When
         linkedList.removeLast();
         thrown = ExpectedException.none();
     }

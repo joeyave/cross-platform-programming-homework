@@ -32,6 +32,7 @@ public class ArrayListTest {
         // When
         arrayList = new ArrayList<>(5);
         int actualCapacity = arrayList.getLength();
+
         // Then
         Assert.assertEquals(expectedCapacity, actualCapacity);
     }
@@ -44,10 +45,10 @@ public class ArrayListTest {
 
         // When
         arrayList.add(0, "new");
-
-        // Then
         String actualValue = arrayList.getFirst();
         int actualSize = arrayList.getSize();
+
+        // Then
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
     }
@@ -65,9 +66,9 @@ public class ArrayListTest {
         String expectedValue = "changed";
         String oldValue = arrayList.change(1, expectedValue);
         int actualSize = arrayList.getSize();
+        String actualValue = arrayList.get(1);
 
         // Then
-        String actualValue = arrayList.get(1);
         Assert.assertEquals(oldValue, givenValue);
         Assert.assertEquals(expectedValue, actualValue);
         Assert.assertEquals(expectedSize, actualSize);
