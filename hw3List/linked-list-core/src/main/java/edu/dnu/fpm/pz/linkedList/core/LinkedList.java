@@ -115,6 +115,7 @@ public class LinkedList<T> implements IList<T> {
         }
         prev.next = node;
         node.next = temp;
+        size++;
     }
 
     @Override
