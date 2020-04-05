@@ -95,15 +95,15 @@ public class ArrayListTest {
     }
 
 
-    String indexLessMessage = "Invalid index! Index was less than expected.";
-    String indexMoreMessage = "Invalid index! Index was more than expected.";
-    String nullObjectMessage = "Object was null!";
+    String INDEX_LESS_MESSAGE = "Invalid index! Index was less than expected.";
+    String INDEX_MORE_MESSAGE = "Invalid index! Index was more than expected.";
+    String NULL_OBJECT_MESSAGE = "Object was null!";
 
     @Test
     public void addAtNegativeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.add(-1, "less exception");
@@ -114,7 +114,7 @@ public class ArrayListTest {
     public void addAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
         // When
         arrayList.add(100, "more exception");
@@ -125,7 +125,7 @@ public class ArrayListTest {
     public void getAtNegativeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.get(-1);
@@ -136,7 +136,7 @@ public class ArrayListTest {
     public void getAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
         // When
         arrayList.get(100);
@@ -147,7 +147,7 @@ public class ArrayListTest {
     public void removeAtNegativeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.remove(-1);
@@ -158,7 +158,7 @@ public class ArrayListTest {
     public void removeAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
         // When
         arrayList.remove(100);
@@ -169,7 +169,7 @@ public class ArrayListTest {
     public void getFirstElementOnEmptyListShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullObjectMessage);
+        thrown.expectMessage(NULL_OBJECT_MESSAGE);
 
         // When
         arrayList.getFirst();
@@ -180,7 +180,7 @@ public class ArrayListTest {
     public void getLastElementOnEmptyListShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.getLast();
@@ -191,7 +191,7 @@ public class ArrayListTest {
     public void removeFirstElementOnEmptyListShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(nullObjectMessage);
+        thrown.expectMessage(NULL_OBJECT_MESSAGE);
 
         // When
         arrayList.removeFirst();
@@ -202,7 +202,7 @@ public class ArrayListTest {
     public void removeLastElementOnEmptyListShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.removeLast();
@@ -213,7 +213,7 @@ public class ArrayListTest {
     public void changeAtNegativeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexLessMessage);
+        thrown.expectMessage(INDEX_LESS_MESSAGE);
 
         // When
         arrayList.change(-1, "change");
@@ -224,7 +224,7 @@ public class ArrayListTest {
     public void changeAtTooLargeIndexShouldThrowException() throws InvalidIndexException {
         // Given
         thrown.expect(InvalidIndexException.class);
-        thrown.expectMessage(indexMoreMessage);
+        thrown.expectMessage(INDEX_MORE_MESSAGE);
 
         // When
         arrayList.change(100, "change");
