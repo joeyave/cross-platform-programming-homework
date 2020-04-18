@@ -51,7 +51,11 @@ public class App {
     }
 
     public static void fillUpCitiesList(List<City> list) throws UnirestException {
-        String host = "https://public.opendatasoft.com/api/records/1.0/search/?dataset=1000-largest-us-cities-by-population-with-geographic-coordinates&rows=1000&facet=city&facet=state&facet=population";
+        String host = "https://public.opendatasoft.com/api/records/1.0/search/" +
+                "?dataset=1000-largest-us-cities-by-population-with-geographic-coordinates" +
+                "&rows=1000&facet=city" +
+                "&facet=state" +
+                "&facet=population";
         HttpResponse<JsonNode> response = Unirest.get(host).asJson();
         JSONObject jsonObject = response.getBody().getObject();
         JSONArray records = (JSONArray) jsonObject.get("records");
