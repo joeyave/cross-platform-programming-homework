@@ -1,13 +1,13 @@
-package edu.dnu.fpm.pz;
-
-import static org.junit.Assert.assertTrue;
+package edu.dnu.fpm.pz.crud.interfaces;
 
 import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
+public class ICRUDTest
 {
     /**
      * Rigorous Test :-)

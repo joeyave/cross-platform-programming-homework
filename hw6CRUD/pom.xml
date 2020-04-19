@@ -3,21 +3,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>hw3List</artifactId>
+        <artifactId>homework</artifactId>
         <groupId>edu.dnu.fpm.pz</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>linked-list-core</artifactId>
+    <artifactId>hw6CRUD</artifactId>
+    <packaging>pom</packaging>
 
-    <name>linked-list-core</name>
-    <dependencies>
-        <dependency>
-            <groupId>edu.dnu.fpm.pz</groupId>
-            <artifactId>list-interface</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+    <name>hw6CRUD</name>
+
+    <modules>
+        <module>CRUD-interface</module>
+        <module>CRUD-core</module>
+        <module>CRUD-console</module>
+        <module>liquibase-migration</module>
+    </modules>
 </project>

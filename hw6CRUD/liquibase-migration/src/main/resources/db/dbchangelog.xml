@@ -1,0 +1,77 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="joseph" id="create_books">
+        <createTable tableName="books">
+            <column autoIncrement="true" name="book_id" type="MEDIUMINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="book_isbn" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_title" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_author" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_year" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="joseph" id="create_reviews">
+        <createTable tableName="reviews">
+            <column autoIncrement="true" name="review_id" type="MEDIUMINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="review_user_id" type="MEDIUMINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review_book_id" type="MEDIUMINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="SMALLINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="joseph" id="create_users">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="user_id" type="MEDIUMINT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_password" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="joseph" id="create_review_book_index">
+        <createIndex indexName="review_book_id" tableName="reviews">
+            <column name="review_book_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="joseph" id="create_review_user_index">
+        <createIndex indexName="review_user_id" tableName="reviews">
+            <column name="review_user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="joseph" id="create_review_user_constraint">
+        <addForeignKeyConstraint baseColumnNames="review_user_id" baseTableName="reviews"
+                                 constraintName="reviews_ibfk_1" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="user_id"
+                                 referencedTableName="users" validate="true"/>
+    </changeSet>
+    <changeSet author="joseph" id="create_review_book_constraint">
+        <addForeignKeyConstraint baseColumnNames="review_book_id" baseTableName="reviews"
+                                 constraintName="reviews_ibfk_2" deferrable="false" initiallyDeferred="false"
+                                 onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="book_id"
+                                 referencedTableName="books" validate="true"/>
+    </changeSet>
+</databaseChangeLog>
