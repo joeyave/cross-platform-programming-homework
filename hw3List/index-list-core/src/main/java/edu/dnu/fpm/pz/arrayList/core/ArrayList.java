@@ -1,7 +1,7 @@
 package edu.dnu.fpm.pz.arrayList.core;
 
-import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
 import edu.dnu.fpm.pz.list.interfaces.IList;
+import edu.dnu.fpm.pz.list.interfaces.InvalidIndexException;
 import edu.dnu.fpm.pz.list.interfaces.Validator;
 
 public class ArrayList<T> implements IList<T> {

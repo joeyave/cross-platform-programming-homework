@@ -4,12 +4,12 @@
     <useClassPathOnly />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="edu.dnu.fpm.pz.crud.console.App" />
+        <option name="PATTERN" value="App" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
     <option name="PACKAGE_NAME" value="edu.dnu.fpm.pz" />
-    <option name="MAIN_CLASS_NAME" value="edu.dnu.fpm.pz.ProcessorTest" />
+    <option name="MAIN_CLASS_NAME" value="ProcessorTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="PARAMETERS" value="" />
