@@ -3,13 +3,14 @@ package edu.dnu.fpm.pz.crud;
 import edu.dnu.fpm.pz.crud.interfaces.ICRUD;
 import edu.dnu.fpm.pz.entities.UserEntity;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserCRUD implements ICRUD<UserEntity> {
 
     @Override
-    public void create(UserEntity entity) {
-
+    public void create(UserEntity entity) throws IOException, SQLException {
     }
 
     @Override
