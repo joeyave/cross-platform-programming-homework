@@ -4,14 +4,13 @@ import edu.dnu.fpm.pz.config.ServiceProviderConfig;
 import edu.dnu.fpm.pz.dao.Dao;
 import edu.dnu.fpm.pz.entity.BookEntity;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class BookDaoImpl implements Dao<BookEntity> {
     @Override
-    public void create(BookEntity entity) throws IOException, SQLException {
+    public void insert(BookEntity bookEntity) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Prepare statement to execute.
@@ -20,10 +19,10 @@ public class BookDaoImpl implements Dao<BookEntity> {
                     "insert into books (book_isbn, book_title, book_author, book_year) " +
                             "values (?, ?, ?, ?)"
             );
-            preparedStatement.setInt(1, entity.getIsbn());
-            preparedStatement.setString(2, entity.getTitle());
-            preparedStatement.setString(3, entity.getAuthor());
-            preparedStatement.setInt(4, entity.getYear());
+            preparedStatement.setString(1, bookEntity.getIsbn());
+            preparedStatement.setString(2, bookEntity.getTitle());
+            preparedStatement.setString(3, bookEntity.getAuthor());
+            preparedStatement.setInt(4, bookEntity.getYear());
 
             // Execute statement.
             preparedStatement.executeUpdate();
@@ -31,7 +30,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public void create(List<BookEntity> entities) throws SQLException, IOException {
+    public void insert(List<BookEntity> bookEntities) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Save autocommit configs and disable it.
@@ -43,11 +42,11 @@ public class BookDaoImpl implements Dao<BookEntity> {
                             "values (?, ?, ?, ?)"
             );
 
-            for (BookEntity entity : entities) {
-                preparedStatement.setInt(1, entity.getIsbn());
-                preparedStatement.setString(2, entity.getTitle());
-                preparedStatement.setString(3, entity.getAuthor());
-                preparedStatement.setInt(4, entity.getYear());
+            for (var bookEntity : bookEntities) {
+                preparedStatement.setString(1, bookEntity.getIsbn());
+                preparedStatement.setString(2, bookEntity.getTitle());
+                preparedStatement.setString(3, bookEntity.getAuthor());
+                preparedStatement.setInt(4, bookEntity.getYear());
 
                 preparedStatement.addBatch();
             }
@@ -58,7 +57,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public List<BookEntity> read() throws IOException, SQLException {
+    public List<BookEntity> getAll() throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection();
              Statement statement = connection.createStatement()) {
             List<BookEntity> bookEntities = new LinkedList<>();
@@ -69,7 +68,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
                 while (resultSet.next()) {
                     BookEntity bookEntity = new BookEntity(
                             resultSet.getInt(1),
-                            resultSet.getInt(2),
+                            resultSet.getString(2),
                             resultSet.getString(3),
                             resultSet.getString(4),
                             resultSet.getInt(5)
@@ -83,7 +82,65 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public void update(BookEntity entity) throws IOException, SQLException {
+    public BookEntity getById(int id) throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from books " +
+                            "where book_id = ?"
+            );
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new BookEntity(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3),
+                            resultSet.getString(4),
+                            resultSet.getInt(5)
+                    );
+                }
+
+                return null;
+            }
+        }
+    }
+
+    public List<BookEntity> getByQuery(String query) throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * " +
+                            "from books " +
+                            "where lower(book_isbn) like lower(?) " +
+                            "or lower (book_title) like lower(?) " +
+                            "or lower (book_author) like lower(?)"
+            );
+            preparedStatement.setString(1, query);
+            preparedStatement.setString(2, query);
+            preparedStatement.setString(3, query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<BookEntity> bookEntities = new LinkedList<>();
+            while (resultSet.next()) {
+                BookEntity bookEntity = new BookEntity(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getInt(5)
+                );
+                bookEntities.add(bookEntity);
+            }
+
+            return bookEntities;
+        }
+    }
+
+
+    @Override
+    public void update(BookEntity bookEntity) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update books " +
@@ -91,18 +148,18 @@ public class BookDaoImpl implements Dao<BookEntity> {
                             "where book_id = ?"
             );
 
-            preparedStatement.setInt(1, entity.getIsbn());
-            preparedStatement.setString(2, entity.getTitle());
-            preparedStatement.setString(3, entity.getAuthor());
-            preparedStatement.setInt(4, entity.getYear());
-            preparedStatement.setInt(5, entity.getId());
+            preparedStatement.setString(1, bookEntity.getIsbn());
+            preparedStatement.setString(2, bookEntity.getTitle());
+            preparedStatement.setString(3, bookEntity.getAuthor());
+            preparedStatement.setInt(4, bookEntity.getYear());
+            preparedStatement.setInt(5, bookEntity.getId());
 
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
-    public void update(List<BookEntity> entities) throws IOException, SQLException {
+    public void update(List<BookEntity> bookEntities) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -113,12 +170,12 @@ public class BookDaoImpl implements Dao<BookEntity> {
                             "where book_id = ?"
             );
 
-            for (BookEntity entity : entities) {
-                preparedStatement.setInt(1, entity.getIsbn());
-                preparedStatement.setString(2, entity.getTitle());
-                preparedStatement.setString(3, entity.getAuthor());
-                preparedStatement.setInt(4, entity.getYear());
-                preparedStatement.setInt(5, entity.getId());
+            for (var bookEntity : bookEntities) {
+                preparedStatement.setString(1, bookEntity.getIsbn());
+                preparedStatement.setString(2, bookEntity.getTitle());
+                preparedStatement.setString(3, bookEntity.getAuthor());
+                preparedStatement.setInt(4, bookEntity.getYear());
+                preparedStatement.setInt(5, bookEntity.getId());
 
                 preparedStatement.addBatch();
             }
@@ -129,7 +186,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public boolean delete(int id) throws IOException, SQLException {
+    public boolean deleteById(int id) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from books " +

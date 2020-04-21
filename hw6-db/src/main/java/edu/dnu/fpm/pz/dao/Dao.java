@@ -1,19 +1,24 @@
 package edu.dnu.fpm.pz.dao;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 public interface Dao<T> {
-    void create(T entity) throws IOException, SQLException;
+    // CREATE.
+    void insert(T entity) throws SQLException;
 
-    void create(List<T> entities) throws SQLException, IOException;
+    void insert(List<T> entities) throws SQLException;
 
-    List<T> read() throws IOException, SQLException;
+    // READ.
+    List<T> getAll() throws SQLException;
 
-    void update(T entity) throws IOException, SQLException;
+    T getById(int id) throws SQLException;
 
-    void update(List<T> entities) throws IOException, SQLException;
+    // UPDATE.
+    void update(T entity) throws SQLException;
 
-    boolean delete(int id) throws IOException, SQLException;
+    void update(List<T> entities) throws SQLException;
+
+    // DELETE.
+    boolean deleteById(int id) throws SQLException;
 }

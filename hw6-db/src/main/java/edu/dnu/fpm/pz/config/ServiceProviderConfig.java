@@ -9,25 +9,23 @@ import java.util.Objects;
 import java.util.Properties;
 
 public class ServiceProviderConfig {
-    public static Connection getConnection() throws SQLException, IOException {
+    public static Connection getConnection() throws SQLException {
         Properties properties = new Properties();
 
-        try (InputStream in =
-                     ServiceProviderConfig
-                             .class
-                             .getClassLoader()
-                             .getResourceAsStream("src\\main\\resources\\db\\database.properties")) {
-            properties.load(in);
+        InputStream input;
+        try {
+            input = ClassLoader
+                    .getSystemClassLoader()
+                    .getResourceAsStream("db/database.properties");
+            properties.load(input);
+
+        } catch (IOException io) {
+            io.printStackTrace();
         }
 
         String drivers = properties.getProperty("driver");
         if (Objects.nonNull(drivers)) {
             System.setProperty("driver", drivers);
-            try {
-                Class.forName(drivers);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
         }
 
         String url = properties.getProperty("url");

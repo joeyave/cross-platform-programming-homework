@@ -2,19 +2,19 @@ package edu.dnu.fpm.pz.entity;
 
 public class BookEntity {
     private int id;
-    private int isbn;
+    private String isbn;
     private String title;
     private String author;
     private int year;
 
-    public BookEntity(int isbn, String title, String author, int year) {
+    public BookEntity(String isbn, String title, String author, int year) {
         this.isbn = isbn;
         this.title = title;
         this.author = author;
         this.year = year;
     }
 
-    public BookEntity(int id, int isbn, String title, String author, int year) {
+    public BookEntity(int id, String isbn, String title, String author, int year) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
@@ -30,11 +30,11 @@ public class BookEntity {
         this.id = id;
     }
 
-    public int getIsbn() {
+    public String getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(int isbn) {
+    public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
 
@@ -71,5 +71,28 @@ public class BookEntity {
                 ", author='" + author + '\'' +
                 ", year=" + year +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BookEntity that = (BookEntity) o;
+
+        if (year != that.year) return false;
+        if (!isbn.equals(that.isbn)) return false;
+        if (!title.equals(that.title)) return false;
+        return author.equals(that.author);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + isbn.hashCode();
+        result = 31 * result + title.hashCode();
+        result = 31 * result + author.hashCode();
+        result = 31 * result + year;
+        return result;
     }
 }

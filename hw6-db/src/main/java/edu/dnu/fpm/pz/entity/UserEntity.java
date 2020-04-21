@@ -16,6 +16,9 @@ public class UserEntity {
         this.password = password;
     }
 
+    public UserEntity() {
+    }
+
     public int getId() {
         return id;
     }

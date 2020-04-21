@@ -1,11 +1,10 @@
 package edu.dnu.fpm.pz.dao.impl;
 
 
-import edu.dnu.fpm.pz.dao.Dao;
 import edu.dnu.fpm.pz.config.ServiceProviderConfig;
+import edu.dnu.fpm.pz.dao.Dao;
 import edu.dnu.fpm.pz.entity.UserEntity;
 
-import java.io.IOException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,22 +12,22 @@ import java.util.List;
 public class UserDaoImpl implements Dao<UserEntity> {
 
     @Override
-    public void create(UserEntity entity) throws IOException, SQLException {
+    public void insert(UserEntity userEntity) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "insert into users (user_name, user_password) " +
                             "values (?, ?)"
             );
 
-            preparedStatement.setString(1, entity.getName());
-            preparedStatement.setString(2, entity.getPassword());
+            preparedStatement.setString(1, userEntity.getName());
+            preparedStatement.setString(2, userEntity.getPassword());
 
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
-    public void create(List<UserEntity> entities) throws IOException, SQLException {
+    public void insert(List<UserEntity> entities) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(autocommit);
@@ -38,9 +37,9 @@ public class UserDaoImpl implements Dao<UserEntity> {
                             "values (?, ?)"
             );
 
-            for (var entity : entities) {
-                preparedStatement.setString(1, entity.getName());
-                preparedStatement.setString(2, entity.getPassword());
+            for (var userEntity : entities) {
+                preparedStatement.setString(1, userEntity.getName());
+                preparedStatement.setString(2, userEntity.getPassword());
 
                 preparedStatement.addBatch();
             }
@@ -51,7 +50,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public List<UserEntity> read() throws IOException, SQLException {
+    public List<UserEntity> getAll() throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection();
              Statement statement = connection.createStatement()) {
 
@@ -74,7 +73,52 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public void update(UserEntity entity) throws IOException, SQLException {
+    public UserEntity getById(int id) throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from users " +
+                            "where user_id = ?"
+            );
+            preparedStatement.setInt(1, id);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new UserEntity(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3)
+                    );
+                }
+
+                return null;
+            }
+        }
+    }
+
+    public UserEntity getByUsername(String username) throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from users " +
+                            "where user_name = ?"
+            );
+            preparedStatement.setString(1, username);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return new UserEntity(
+                            resultSet.getInt(1),
+                            resultSet.getString(2),
+                            resultSet.getString(3)
+                    );
+                }
+
+                return null;
+            }
+        }
+    }
+
+    @Override
+    public void update(UserEntity userEntity) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update users " +
@@ -82,16 +126,16 @@ public class UserDaoImpl implements Dao<UserEntity> {
                             "where user_id = ?"
             );
 
-            preparedStatement.setString(1, entity.getName());
-            preparedStatement.setString(2, entity.getPassword());
-            preparedStatement.setInt(3, entity.getId());
+            preparedStatement.setString(1, userEntity.getName());
+            preparedStatement.setString(2, userEntity.getPassword());
+            preparedStatement.setInt(3, userEntity.getId());
 
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
-    public void update(List<UserEntity> entities) throws IOException, SQLException {
+    public void update(List<UserEntity> entities) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -102,10 +146,10 @@ public class UserDaoImpl implements Dao<UserEntity> {
                             "where user_id = ?"
             );
 
-            for (var entity : entities) {
-                preparedStatement.setString(1, entity.getName());
-                preparedStatement.setString(2, entity.getPassword());
-                preparedStatement.setInt(3, entity.getId());
+            for (var userEntity : entities) {
+                preparedStatement.setString(1, userEntity.getName());
+                preparedStatement.setString(2, userEntity.getPassword());
+                preparedStatement.setInt(3, userEntity.getId());
 
                 preparedStatement.addBatch();
             }
@@ -117,7 +161,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public boolean delete(int id) throws IOException, SQLException {
+    public boolean deleteById(int id) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "delete from users " +
