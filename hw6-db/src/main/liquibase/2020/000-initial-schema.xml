@@ -1,0 +1,66 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="avelt (generated)" id="1587427002425-1" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createTable tableName="books">
+            <column autoIncrement="true" name="book_id" type="MEDIUMINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="book_isbn" type="VARCHAR(10)"/>
+            <column name="book_title" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_author" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="book_year" type="SMALLINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-2" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createTable tableName="reviews">
+            <column autoIncrement="true" name="review_id" type="MEDIUMINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="review_user_id" type="MEDIUMINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review_book_id" type="MEDIUMINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="review" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="SMALLINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-3" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createTable tableName="users">
+            <column autoIncrement="true" name="user_id" type="MEDIUMINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_name" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_password" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-4" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createIndex indexName="review_book_id" tableName="reviews">
+            <column name="review_book_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-5" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createIndex indexName="review_user_id" tableName="reviews">
+            <column name="review_user_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-6" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <addForeignKeyConstraint baseColumnNames="review_user_id" baseTableName="reviews" constraintName="reviews_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="user_id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet author="avelt (generated)" id="1587427002425-7" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <addForeignKeyConstraint baseColumnNames="review_book_id" baseTableName="reviews" constraintName="reviews_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="book_id" referencedTableName="books"/>
+    </changeSet>
+</databaseChangeLog>
