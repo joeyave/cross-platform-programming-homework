@@ -3,16 +3,20 @@ package edu.dnu.fpm.pz.dao.impl;
 
 import edu.dnu.fpm.pz.config.ServiceProviderConfig;
 import edu.dnu.fpm.pz.dao.Dao;
+import edu.dnu.fpm.pz.entity.EntityValidator;
 import edu.dnu.fpm.pz.entity.UserEntity;
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class UserDaoImpl implements Dao<UserEntity> {
+    EntityValidator validator = new EntityValidator();
 
     @Override
-    public void insert(UserEntity userEntity) throws SQLException {
+    public void insert(UserEntity userEntity) throws SQLException, NoSuchObjectException {
+        validator.userEntityValidate(userEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "insert into users (user_name, user_password) " +
@@ -27,10 +31,10 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public void insert(List<UserEntity> entities) throws SQLException {
+    public void insert(List<UserEntity> entities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
-            connection.setAutoCommit(autocommit);
+            connection.setAutoCommit(false);
 
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "insert into users (user_name, user_password) " +
@@ -38,6 +42,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
             );
 
             for (var userEntity : entities) {
+                validator.userEntityValidate(userEntity);
                 preparedStatement.setString(1, userEntity.getName());
                 preparedStatement.setString(2, userEntity.getPassword());
 
@@ -50,7 +55,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public List<UserEntity> getAll() throws SQLException {
+    public LinkedList<UserEntity> getAll() throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection();
              Statement statement = connection.createStatement()) {
 
@@ -118,7 +123,8 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public void update(UserEntity userEntity) throws SQLException {
+    public void update(UserEntity userEntity) throws SQLException, NoSuchObjectException {
+        validator.userEntityValidate(userEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update users " +
@@ -135,7 +141,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
     }
 
     @Override
-    public void update(List<UserEntity> entities) throws SQLException {
+    public void update(List<UserEntity> entities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -147,6 +153,7 @@ public class UserDaoImpl implements Dao<UserEntity> {
             );
 
             for (var userEntity : entities) {
+                validator.userEntityValidate(userEntity);
                 preparedStatement.setString(1, userEntity.getName());
                 preparedStatement.setString(2, userEntity.getPassword());
                 preparedStatement.setInt(3, userEntity.getId());
@@ -170,6 +177,16 @@ public class UserDaoImpl implements Dao<UserEntity> {
 
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() != 0;
+        }
+    }
+
+    public void deleteAll() throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "delete from users"
+            );
+
+            preparedStatement.executeUpdate();
         }
     }
 }

@@ -11,9 +11,11 @@ import edu.dnu.fpm.pz.entity.ReviewEntity;
 import edu.dnu.fpm.pz.entity.UserEntity;
 import edu.dnu.fpm.pz.presentation.console.Menu;
 import edu.dnu.fpm.pz.presentation.console.MenuItem;
+import lombok.SneakyThrows;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.rmi.NoSuchObjectException;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -55,7 +57,7 @@ public class MainMenu {
         }
     }
 
-    public void registration() throws SQLException {
+    public void registration() throws SQLException, NoSuchObjectException {
         CURRENT_USER = null;
         System.out.println("Username: ");
         String username = scanner.nextLine();
@@ -95,13 +97,22 @@ public class MainMenu {
         menu.execute();
     }
 
-    public void editReview(int id) throws SQLException {
+    @SneakyThrows
+    public void editReview(int id) {
         System.out.println("Review: ");
         String review = scanner.nextLine();
         System.out.println("Rating: ");
         int rating = scanner.nextInt();
 
-        reviewDao.updateById(id, review, rating);
+        ReviewEntity reviewEntity = new ReviewEntity(
+                id,
+                CURRENT_USER.getId(),
+                0,
+                review,
+                rating
+        );
+
+        reviewDao.update(reviewEntity);
     }
 
     public void bookSearch() throws SQLException {
@@ -139,7 +150,7 @@ public class MainMenu {
         menu.execute();
     }
 
-    public void leaveReview(int bookId) throws SQLException {
+    public void leaveReview(int bookId) throws SQLException, NoSuchObjectException {
         System.out.println("Review: ");
         String review = scanner.nextLine();
         System.out.println("Rating: ");

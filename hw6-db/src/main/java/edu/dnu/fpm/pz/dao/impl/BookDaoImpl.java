@@ -3,14 +3,19 @@ package edu.dnu.fpm.pz.dao.impl;
 import edu.dnu.fpm.pz.config.ServiceProviderConfig;
 import edu.dnu.fpm.pz.dao.Dao;
 import edu.dnu.fpm.pz.entity.BookEntity;
+import edu.dnu.fpm.pz.entity.EntityValidator;
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class BookDaoImpl implements Dao<BookEntity> {
+    EntityValidator validator = new EntityValidator();
+
     @Override
-    public void insert(BookEntity bookEntity) throws SQLException {
+    public void insert(BookEntity bookEntity) throws SQLException, NoSuchObjectException {
+        validator.bookEntityValidate(bookEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Prepare statement to execute.
@@ -30,7 +35,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public void insert(List<BookEntity> bookEntities) throws SQLException {
+    public void insert(List<BookEntity> bookEntities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Save autocommit configs and disable it.
@@ -43,6 +48,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
             );
 
             for (var bookEntity : bookEntities) {
+                validator.bookEntityValidate(bookEntity);
                 preparedStatement.setString(1, bookEntity.getIsbn());
                 preparedStatement.setString(2, bookEntity.getTitle());
                 preparedStatement.setString(3, bookEntity.getAuthor());
@@ -57,10 +63,10 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public List<BookEntity> getAll() throws SQLException {
+    public LinkedList<BookEntity> getAll() throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection();
              Statement statement = connection.createStatement()) {
-            List<BookEntity> bookEntities = new LinkedList<>();
+            LinkedList<BookEntity> bookEntities = new LinkedList<>();
 
             try (ResultSet resultSet = statement.executeQuery(
                     "select * from books"
@@ -106,7 +112,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
         }
     }
 
-    public List<BookEntity> getByQuery(String query) throws SQLException {
+    public LinkedList<BookEntity> getByQuery(String query) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -122,7 +128,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<BookEntity> bookEntities = new LinkedList<>();
+            LinkedList<BookEntity> bookEntities = new LinkedList<>();
             while (resultSet.next()) {
                 BookEntity bookEntity = new BookEntity(
                         resultSet.getInt(1),
@@ -140,11 +146,12 @@ public class BookDaoImpl implements Dao<BookEntity> {
 
 
     @Override
-    public void update(BookEntity bookEntity) throws SQLException {
+    public void update(BookEntity bookEntity) throws SQLException, NoSuchObjectException {
+        validator.bookEntityValidate(bookEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update books " +
-                            "set book_isbn = ?, book_title = ?, book_author = ?, book_year = ?)" +
+                            "set book_isbn = ?, book_title = ?, book_author = ?, book_year = ?" +
                             "where book_id = ?"
             );
 
@@ -159,7 +166,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
     }
 
     @Override
-    public void update(List<BookEntity> bookEntities) throws SQLException {
+    public void update(List<BookEntity> bookEntities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -171,6 +178,7 @@ public class BookDaoImpl implements Dao<BookEntity> {
             );
 
             for (var bookEntity : bookEntities) {
+                validator.bookEntityValidate(bookEntity);
                 preparedStatement.setString(1, bookEntity.getIsbn());
                 preparedStatement.setString(2, bookEntity.getTitle());
                 preparedStatement.setString(3, bookEntity.getAuthor());
@@ -195,6 +203,16 @@ public class BookDaoImpl implements Dao<BookEntity> {
 
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() != 0;
+        }
+    }
+
+    public void deleteAll() throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "delete from books"
+            );
+
+            preparedStatement.executeUpdate();
         }
     }
 }

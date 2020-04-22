@@ -2,15 +2,20 @@ package edu.dnu.fpm.pz.dao.impl;
 
 import edu.dnu.fpm.pz.config.ServiceProviderConfig;
 import edu.dnu.fpm.pz.dao.Dao;
+import edu.dnu.fpm.pz.entity.EntityValidator;
 import edu.dnu.fpm.pz.entity.ReviewEntity;
 
+import java.rmi.NoSuchObjectException;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
 public class ReviewDaoImpl implements Dao<ReviewEntity> {
+    EntityValidator validator = new EntityValidator();
+
     @Override
-    public void insert(ReviewEntity reviewEntity) throws SQLException {
+    public void insert(ReviewEntity reviewEntity) throws SQLException, NoSuchObjectException {
+        validator.reviewEntityValidate(reviewEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Prepare statement to execute.
@@ -30,7 +35,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
     }
 
     @Override
-    public void insert(List<ReviewEntity> entities) throws SQLException {
+    public void insert(List<ReviewEntity> entities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
 
             // Save autocommit configs and disable it.
@@ -43,6 +48,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
             );
 
             for (var reviewEntity : entities) {
+                validator.reviewEntityValidate(reviewEntity);
                 preparedStatement.setInt(1, reviewEntity.getUserId());
                 preparedStatement.setInt(2, reviewEntity.getBookId());
                 preparedStatement.setString(3, reviewEntity.getReview());
@@ -57,10 +63,10 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
     }
 
     @Override
-    public List<ReviewEntity> getAll() throws SQLException {
+    public LinkedList<ReviewEntity> getAll() throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection();
              Statement statement = connection.createStatement()) {
-            List<ReviewEntity> reviewEntities = new LinkedList<>();
+            LinkedList<ReviewEntity> reviewEntities = new LinkedList<>();
 
             try (ResultSet resultSet = statement.executeQuery(
                     "select * from reviews"
@@ -106,7 +112,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
         }
     }
 
-    public List<ReviewEntity> getByUserId(int id) throws SQLException {
+    public LinkedList<ReviewEntity> getByUserId(int id) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "select * from reviews " +
@@ -115,7 +121,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<ReviewEntity> reviewEntities = new LinkedList<>();
+            LinkedList<ReviewEntity> reviewEntities = new LinkedList<>();
 
             while (resultSet.next()) {
                 ReviewEntity reviewEntity = new ReviewEntity(
@@ -132,7 +138,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
         }
     }
 
-    public List<ReviewEntity> getByBookId(int id) throws SQLException {
+    public LinkedList<ReviewEntity> getByBookId(int id) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "select * from reviews " +
@@ -141,7 +147,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            List<ReviewEntity> reviewEntities = new LinkedList<>();
+            LinkedList<ReviewEntity> reviewEntities = new LinkedList<>();
 
             while (resultSet.next()) {
                 ReviewEntity reviewEntity = new ReviewEntity(
@@ -159,25 +165,8 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
     }
 
     @Override
-    public void update(ReviewEntity reviewEntity) throws SQLException {
-        try (Connection connection = ServiceProviderConfig.getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(
-                    "update reviews " +
-                            "set review_user_id = ?, review_book_id = ?, review = ?, rating = ? " +
-                            "where review_id = ?"
-            );
-
-            preparedStatement.setInt(1, reviewEntity.getUserId());
-            preparedStatement.setInt(2, reviewEntity.getBookId());
-            preparedStatement.setString(3, reviewEntity.getReview());
-            preparedStatement.setInt(4, reviewEntity.getRating());
-            preparedStatement.setInt(5, reviewEntity.getId());
-
-            preparedStatement.executeUpdate();
-        }
-    }
-
-    public void updateById(int id, String review, int rating) throws SQLException {
+    public void update(ReviewEntity reviewEntity) throws SQLException, NoSuchObjectException {
+        validator.reviewEntityValidate(reviewEntity);
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update reviews " +
@@ -185,16 +174,16 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
                             "where review_id = ?"
             );
 
-            preparedStatement.setString(1, review);
-            preparedStatement.setInt(2, rating);
-            preparedStatement.setInt(3, id);
+            preparedStatement.setString(1, reviewEntity.getReview());
+            preparedStatement.setInt(2, reviewEntity.getRating());
+            preparedStatement.setInt(3, reviewEntity.getId());
 
             preparedStatement.executeUpdate();
         }
     }
 
     @Override
-    public void update(List<ReviewEntity> entities) throws SQLException {
+    public void update(List<ReviewEntity> entities) throws SQLException, NoSuchObjectException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             boolean autocommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
@@ -206,6 +195,7 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
             );
 
             for (var reviewEntity : entities) {
+                validator.reviewEntityValidate(reviewEntity);
                 preparedStatement.setInt(1, reviewEntity.getUserId());
                 preparedStatement.setInt(2, reviewEntity.getBookId());
                 preparedStatement.setString(3, reviewEntity.getReview());
@@ -229,6 +219,16 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
 
             preparedStatement.setInt(1, id);
             return preparedStatement.executeUpdate() != 0;
+        }
+    }
+
+    public void deleteAll() throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "delete from reviews"
+            );
+
+            preparedStatement.executeUpdate();
         }
     }
 }
