@@ -3,13 +3,13 @@ package edu.dnu.fpm.pz.entity;
 public class ReviewEntity {
     private int id;
     private int userId;
-    private int book_id;
+    private int bookId;
     private String review;
     private int rating;
 
     public ReviewEntity(int userId, int bookId, String review, int rating) {
         this.userId = userId;
-        this.book_id = bookId;
+        this.bookId = bookId;
         this.review = review;
         this.rating = rating;
     }
@@ -17,7 +17,7 @@ public class ReviewEntity {
     public ReviewEntity(int id, int userId, int bookId, String review, int rating) {
         this.id = id;
         this.userId = userId;
-        this.book_id = bookId;
+        this.bookId = bookId;
         this.review = review;
         this.rating = rating;
     }
@@ -39,11 +39,11 @@ public class ReviewEntity {
     }
 
     public int getBookId() {
-        return book_id;
+        return bookId;
     }
 
     public void setBookId(int book_id) {
-        this.book_id = book_id;
+        this.bookId = book_id;
     }
 
     public String getReview() {
@@ -67,7 +67,7 @@ public class ReviewEntity {
         return "ReviewEntity{" +
                 "id=" + id +
                 ", userId=" + userId +
-                ", book_id=" + book_id +
+                ", book_id=" + bookId +
                 ", review='" + review + '\'' +
                 ", rating=" + rating +
                 '}';

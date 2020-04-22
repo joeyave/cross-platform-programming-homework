@@ -132,6 +132,32 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
         }
     }
 
+    public List<ReviewEntity> getByBookId(int id) throws SQLException {
+        try (Connection connection = ServiceProviderConfig.getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from reviews " +
+                            "where review_book_id = ?"
+            );
+            preparedStatement.setInt(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<ReviewEntity> reviewEntities = new LinkedList<>();
+
+            while (resultSet.next()) {
+                ReviewEntity reviewEntity = new ReviewEntity(
+                        resultSet.getInt(1),
+                        resultSet.getInt(2),
+                        resultSet.getInt(3),
+                        resultSet.getString(4),
+                        resultSet.getInt(5)
+                );
+                reviewEntities.add(reviewEntity);
+            }
+
+            return reviewEntities;
+        }
+    }
+
     @Override
     public void update(ReviewEntity reviewEntity) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
@@ -151,19 +177,17 @@ public class ReviewDaoImpl implements Dao<ReviewEntity> {
         }
     }
 
-    public void updateUserReview(ReviewEntity reviewEntity) throws SQLException {
+    public void updateById(int id, String review, int rating) throws SQLException {
         try (Connection connection = ServiceProviderConfig.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(
                     "update reviews " +
                             "set review = ?, rating = ? " +
-                            "where review_id = ? and review_user_id = ? and review_book_id = ?"
+                            "where review_id = ?"
             );
 
-            preparedStatement.setString(1, reviewEntity.getReview());
-            preparedStatement.setInt(2, reviewEntity.getRating());
-            preparedStatement.setInt(3, reviewEntity.getId());
-            preparedStatement.setInt(4, reviewEntity.getUserId());
-            preparedStatement.setInt(5, reviewEntity.getBookId());
+            preparedStatement.setString(1, review);
+            preparedStatement.setInt(2, rating);
+            preparedStatement.setInt(3, id);
 
             preparedStatement.executeUpdate();
         }
